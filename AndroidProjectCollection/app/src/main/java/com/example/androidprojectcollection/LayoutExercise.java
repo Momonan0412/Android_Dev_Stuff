@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.util.Random;
 
 public class LayoutExercise extends AppCompatActivity {
-    Button btn1, btn2, btn3, btn4, btn5, btn6;
+    Button btn1, btn2, btn3, btn4, btn5, btn6, btn7;
     Boolean iscolor = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,7 @@ public class LayoutExercise extends AppCompatActivity {
         btn4 = findViewById(R.id.btnExit);
         btn5 = findViewById(R.id.btnChangeBG);
         btn6 = findViewById(R.id.btnChangeThis);
+        btn7 = findViewById(R.id.btnCalc);
         ConstraintLayout constraintLayout = findViewById(R.id.clChangeColor);
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +76,13 @@ public class LayoutExercise extends AppCompatActivity {
                 Random color = new Random();
                 btn6.setBackgroundColor(Color.argb(255, color.nextInt(255), color.nextInt(255), color.nextInt(255)));
 
+            }
+        });
+        btn7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(LayoutExercise.this, CalculatorExercise.class);
+                startActivity(intent1);
             }
         });
     }
