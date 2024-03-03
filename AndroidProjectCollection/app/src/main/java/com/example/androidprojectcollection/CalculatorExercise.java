@@ -13,9 +13,12 @@ import org.mozilla.javascript.Scriptable;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Stack;
 
 public class CalculatorExercise extends AppCompatActivity implements View.OnClickListener{
+
+    String data = "";
     TextView tV1, tV2;
     MaterialButton[] btn = new MaterialButton[10];
     MaterialButton  btnAdd,  btnSub,  btnDiv,  btnMul,  btnEqual;
@@ -30,6 +33,7 @@ public class CalculatorExercise extends AppCompatActivity implements View.OnClic
 
         assignView(btn[0],R.id.btn_0);
         assignView(btn[1],R.id.btn_1);
+        assignView(btn[2],R.id.btn_2);
         assignView(btn[3],R.id.btn_3);
         assignView(btn[4],R.id.btn_4);
         assignView(btn[5],R.id.btn_5);
@@ -58,39 +62,36 @@ public class CalculatorExercise extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         MaterialButton button = (MaterialButton) view;
         String buttonText = button.getText().toString();
-        String data = tV1.getText().toString();
-        if(buttonText.equals("C")){
-            if(data.length() == 0) return;
-            data = data.substring(0, data.length() - 1);
-            tV1.setText(data);
-            return;
-        }
-        if(buttonText.equals("AC")){
-            if(data.length() == 0) return;
-            tV1.setText("");
-            tV2.setText("");
-            return;
-        }
-        if(buttonText.equals("=")){
-            String res = getResult(data);
-            if(res.equals("Err")){
-                tV2.setText("");
-            }else{
-                tV2.setText(res);
+
+        if (buttonText.equals("C")) {
+            if (data.length() > 0) {
+                data = data.substring(0, data.length() - 1);
             }
+        } else if (buttonText.equals("AC")) {
+            data = "";
+        } else if (buttonText.equals("=")) {
+            String result = getResult(data);
+            tV2.setText(result.equals("Err") ? "" : result);
             return;
+        } else {
+            data += buttonText;
         }
-        data = data + buttonText;
+
+        // Update TextViews
         tV1.setText(data);
+        tV2.setText("");
     }
+
     public String getResult(String data){
         String res;
         try{
             Context context = Context.enter();
             context.setOptimizationLevel(-1);
-            Scriptable scriptable = context.initStandardObjects();
-            res =  context.evaluateString(scriptable, data, "JavaScript", 1, null).toString();
-            if(res.endsWith(".0")) res = res.replace(".0", "");
+            Scriptable scriptable = context.initSafeStandardObjects();
+            res = context.evaluateString(scriptable, data, "JavaScript", 1, null).toString();
+            if(res.endsWith(".0")){
+                res = res.replace(".0", "");
+            }
         } catch (Exception e){
             return "Err";
         }
