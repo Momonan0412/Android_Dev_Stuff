@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CalculatorExercise">
+    tools:context=".Calculator.CalculatorExercise">
     <TextView
         android:id="@+id/solutionView"
         android:layout_width="match_parent"
@@ -15,10 +15,10 @@
         android:text=""
         android:textColor="#6A0606"
         android:textSize="35dp"
-        app:layout_constraintBottom_toTopOf="@+id/resutView"
+        app:layout_constraintBottom_toTopOf="@+id/resultView"
         tools:layout_editor_absoluteX="20dp"></TextView>
     <TextView
-        android:id="@+id/resutView"
+        android:id="@+id/resultView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"

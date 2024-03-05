@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.androidprojectcollection.Calculator.CalculatorExercise;
+
 import java.util.Random;
 
 public class LayoutExercise extends AppCompatActivity {
