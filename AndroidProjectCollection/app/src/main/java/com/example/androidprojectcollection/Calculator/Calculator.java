@@ -1,13 +1,29 @@
 package com.example.androidprojectcollection.Calculator;
 
+import android.widget.Switch;
+
 import com.example.androidprojectcollection.MakeToast;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 public class Calculator implements MakeToast{
     public Calculator() {}
-    public String getResult(String data){
+    public String getResult(ArrayList<String> data){
+        InfixToPostfixCalculator infixToPostfixCalculator = new InfixToPostfixCalculator();
+        ArrayList<String> postfixExpression = infixToPostfixCalculator.infixToPostfix(data);
+        System.out.println("Infix Expression: " + data);
+        System.out.println("Postfix Expression: " + postfixExpression);
+        double result = infixToPostfixCalculator.evaluatePostfix(postfixExpression);
+        System.out.println("Result: " + result);
+        String strResult = result + "";
+        if(strResult.endsWith(".0")) strResult = strResult.replace(".0","");
+        return strResult;
+    }
+    public String PEMDAS(String data){
         String res;
         try{
             Context context = Context.enter();

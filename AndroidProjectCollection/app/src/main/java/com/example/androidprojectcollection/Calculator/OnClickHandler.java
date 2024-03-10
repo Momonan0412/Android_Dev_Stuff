@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class OnClickHandler implements View.OnClickListener, MakeToast {
     String data;
-    String mdas;
+    ArrayList<String> mdas = new ArrayList<>();
     Calculator calculator;
     Activity activity;
     TextView TextView1, TextView2;
@@ -32,12 +32,11 @@ public class OnClickHandler implements View.OnClickListener, MakeToast {
             }
         } else if (buttonText.equals("AC")) {
             data = "";
-        } else if (buttonText.equals("=") && Character.isDigit(mdas.charAt(mdas.length()-1))) {
-            System.out.println("Before" + mdas);
+        } else if (buttonText.equals("=") && isLastCharDigit(mdas.get(mdas.size() - 1))) {
             String result = calculator.getResult(mdas);
             this.TextView2.setText(result.equals("Err") ? "" : result);
-            mdas = result;
-            System.out.println("After" + mdas);
+            String res = result;
+            System.out.println("After" + res);
             return;
         } else if (buttonText.equals("=")) {
             showToast(activity, "Warning: The last character is an operator!");
@@ -62,7 +61,7 @@ public class OnClickHandler implements View.OnClickListener, MakeToast {
         }
 // -------------------------------------------------------------------------------------------------
         else {
-            mdas +=buttonText;
+            mdas.add(buttonText);
             data += buttonText;
         }
 // -------------------------------------------------------------------------------------------------
@@ -94,5 +93,12 @@ public class OnClickHandler implements View.OnClickListener, MakeToast {
 
     public void setTextView2(TextView textView2) {
         TextView2 = textView2;
+    }
+    private static boolean isLastCharDigit(String str) {
+        if (str.length() > 0) {
+            char lastChar = str.charAt(str.length() - 1);
+            return Character.isDigit(lastChar);
+        }
+        return false;
     }
 }
