@@ -24,12 +24,6 @@ public class InfixToPostfixCalculator {
     public ArrayList<String> infixToPostfix(ArrayList<String> infixExpression) {
         ArrayList<String> postfixExpression = new ArrayList<>();
         Stack<String> stack = new Stack<>();
-        // Step1: Add Operand into the postfixExpression
-        // Step2: "(" Push to stack
-        // Step3: ")" While stack is not empty and the peek is not "(" add all to the postfixExpression and pop, pop the "("
-        // Step4: while stack is not empty && operator precedence of token less tha or equal sa precdence sa stack.peek
-        // ---> add to postfixExpression and pop and lastly after push the "token" or the current element
-        // Step5: "Stack" is not empty empty it buy adding to the postfixExpression and return the postfixExpression
         for (String token : infixExpression) {
             if (isOperand(token)) {
                 postfixExpression.add(token);

@@ -8,6 +8,7 @@ import com.example.androidprojectcollection.MakeToast;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class OnClickHandler implements View.OnClickListener, MakeToast {
     String data;
@@ -29,17 +30,22 @@ public class OnClickHandler implements View.OnClickListener, MakeToast {
         if (buttonText.equals("C")) {
             if (!data.isEmpty()) {
                 data = data.substring(0, data.length() - 1);
+            } else {
+                this.TextView1.setText("");
+                this.TextView2.setText("");
+                return;
             }
         } else if (buttonText.equals("AC")) {
             data = "";
-        } else if (buttonText.equals("=") && isLastCharDigit(mdas.get(mdas.size() - 1))) {
-            String result = calculator.getResult(mdas);
-            this.TextView2.setText(result.equals("Err") ? "" : result);
-            String res = result;
-            System.out.println("After" + res);
+            this.TextView1.setText("");
+            this.TextView2.setText("");
             return;
         } else if (buttonText.equals("=")) {
-            showToast(activity, "Warning: The last character is an operator!");
+            this.TextView1.setText("");
+            this.TextView2.setText("");
+            mdas = (ArrayList<String>) calculator.tokenizeExpression(data);
+            String result = calculator.getResult(mdas);
+            this.TextView2.setText(result);
             return;
         }
 // -------------------------------------------------------------------------------------------------
@@ -61,26 +67,18 @@ public class OnClickHandler implements View.OnClickListener, MakeToast {
         }
 // -------------------------------------------------------------------------------------------------
         else {
-            mdas.add(buttonText);
             data += buttonText;
         }
 // -------------------------------------------------------------------------------------------------
-        if ((!data.endsWith("+") && !data.endsWith("-") && !data.endsWith("*") && !data.endsWith("/")) && data.length() > 2) {
-            String seqResult = "";
-            try {
-                seqResult = calculator.sequentialResult(data);
-                if (seqResult.endsWith(".0")) {
-                    seqResult = seqResult.replace(".0", "");
-                }
-                data = seqResult;
-            } catch (ArithmeticException e) {
-                e.printStackTrace();
-            } catch (OperatorNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
         this.TextView1.setText(data);
-        this.TextView2.setText("");
+        String temp = "";
+        temp += data;
+        temp = calculator.sequence(temp);
+        if(temp != "Err"){
+            this.TextView2.setText(temp);
+        } else {
+            this.TextView2.setText("");
+        }
     }
     public void assignView(View view, int ID) {
         view = activity.findViewById(ID);

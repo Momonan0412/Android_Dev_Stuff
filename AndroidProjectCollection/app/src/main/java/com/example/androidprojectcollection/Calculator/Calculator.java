@@ -8,7 +8,10 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Calculator implements MakeToast{
     public Calculator() {}
@@ -23,7 +26,7 @@ public class Calculator implements MakeToast{
         if(strResult.endsWith(".0")) strResult = strResult.replace(".0","");
         return strResult;
     }
-    public String PEMDAS(String data){
+    public String sequence(String data){
         String res;
         try{
             Context context = Context.enter();
@@ -39,39 +42,21 @@ public class Calculator implements MakeToast{
         return res;
     }
     public String sequentialResult(String data) throws OperatorNotFoundException {
-        // Initialize variables to store the numbers and operator
         double num1 = 0;
         double num2 = 0;
         char operator = ' ';
-
-        // Iterate through the characters in the input data
         int i;
         for (i = 0; i < data.length(); i++) {
             char currentChar = data.charAt(i);
-
-            // Check if the current character is an operator
             if (isOperator(currentChar)) {
-                // Extract the first number from the start of the string to the current index
                 num1 = Double.parseDouble(data.substring(0, i).trim());
-
-                // Set the operator
                 operator = currentChar;
-
-                // Find the next operator, if any, to get the end index of the second number
                 int nextOperatorIndex = findNextOperator(data, i + 1);
-
-                // Extract the second number from the current index to the next operator or end of the string
                 num2 = Double.parseDouble(data.substring(i + 1, nextOperatorIndex).trim());
-
-                // Update the loop index to the next operator or end of the string
                 i = nextOperatorIndex - 1;
-
-                // Perform the calculation based on the operator
                 num1 = (num2 != 0) ? getSeqResult(num1, num2, operator) : num1;
             }
         }
-
-        // Format the result and return it as a string
         return String.valueOf(num1);
     }
 
@@ -110,5 +95,26 @@ public class Calculator implements MakeToast{
             }
         }
         return total;
+    }
+
+    public List<String> tokenizeExpression(String expression) {
+        // Define a pattern to match operators (+, -, *, /)
+        Pattern pattern = Pattern.compile("[+\\-*/]");
+
+        // Split the expression based on operators
+        Matcher matcher = pattern.matcher(expression);
+        List<String> tokens = new ArrayList<>();
+        int previousEnd = 0;
+        while (matcher.find()) {
+            // Add the operand before the operator
+            tokens.add(expression.substring(previousEnd, matcher.start()).trim());
+            // Add the operator itself
+            tokens.add(matcher.group());
+            previousEnd = matcher.end();
+        }
+        // Add the last operand after the last operator
+        tokens.add(expression.substring(previousEnd).trim());
+
+        return tokens;
     }
 }
